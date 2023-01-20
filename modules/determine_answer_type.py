@@ -16,34 +16,38 @@ def defineCategory(text):
                 # print("---question category: ","REGISTRASI")
                 status = False
                 return "REGISTRASI"
-            elif i[0].lower() in ["information", "informations", "ask","asking", "care", "administration", "marketing"]:
+            elif i[0].lower() in ["schedule", "schedules"]:
+                # print("---question category: ","JADWAL")
+                status = False
+                return "JADWAL"
+            elif i[0].lower() in ["degree", "master", "program", "programs", "tpks", "major", "majors", "majoring", "learning", "lectures", "lecture"]:
+                # print("---question category: ","INFORMASI PROGRAM")
+                status = False
+                return "INFORMASI PROGRAM"
+            elif i[0].lower() in ["information", "informations", "ask","asking","service", "services", "serving", "care", "administration", "marketing"]:
                 # print("---question category: ","ADMISI")
                 status = False
                 return "ADMISI"
+            elif i[0].lower() in ["cost", "scholar", "scholarship", "tuition"]:
+                # print("---question category: ","ADMISI")
+                status = False
+                return "BIAYA PERKULIAHAN"
             elif i[0].lower() in ["verification", "validation", "payment","-register", "-registering", "-registration"]:
                 # print("---question category: ","VERIFIKASI DAN PENDAFTARAN ULANG")
                 status = False
                 return "VERIFIKASI DAN PENDAFTARAN ULANG"
-            elif i[0].lower() in ["degree", "master", "program", "programs", "tpks", "major", "majors", "majoring", "learning"]:
-                # print("---question category: ","INFORMASI PROGRAM")
-                status = False
-                return "INFORMASI PROGRAM"
-            elif i[0].lower() in ["schedule"]:
-                # print("---question category: ","JADWAL")
-                status = False
-                return "JADWAL"
             elif i[0].lower() in ["orientation", "MOS"]:
                 # print("---question category: ","ORIENTASI MAHASISWA BARU")
                 status = False
                 return "ORIENTASI MAHASISWA BARU"
-            elif i[0].lower() in ["transfer", "line", "change", "changing", "update", "updating"]:
+            elif i[0].lower() in ["transfer", "line", "change", "changes", "changing", "update", "updating"]:
                 # print("---question category: ","PENGAJUAN PERUBAHAN")
                 status = False
                 return "PENGAJUAN PERUBAHAN"
             elif i[0].lower() in ["refund", "cancel", "canceling", "cancelation"]:
                 # print("---question category: ","REFUND")
                 status = False
-                return "REFUND"
+                return "PENGEMBALIAN DANA"
     
     if  status == True:
         return "TIDAK TERKATEGORIKAN" 
