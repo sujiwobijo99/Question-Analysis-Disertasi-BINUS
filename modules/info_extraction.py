@@ -1,10 +1,11 @@
 import nltk
 from nltk.tree import Tree
-from nltk.stem.porter import PorterStemmer
 
 # Question Translation Library
 import translators as ts
 import translators.server as tss
+
+from nltk.stem.porter import PorterStemmer
 
 ps = PorterStemmer()
 stem = ps.stem
@@ -79,7 +80,7 @@ def getNamedEntity(answers):
         answerToken = nltk.word_tokenize(answers)
         nc = nltk.ne_chunk(nltk.pos_tag(answerToken, tagset="universal"))
         # print(nc)
-        nc.draw()
+        # nc.draw()
         # t = treebank.parsed_sents(nc)[0]
         # print(t)
         for word,pos in nc:
