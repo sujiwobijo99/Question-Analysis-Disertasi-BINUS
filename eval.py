@@ -13,7 +13,7 @@ import translators.server as tss
 from gensim.parsing.preprocessing import remove_stopwords
 
 # Evaluation import
-from evaluation import evaluate
+from evaluation import evaluate, evaluate_question
 
 import csv
 
@@ -28,8 +28,7 @@ with open("./datasets.csv", 'r') as file:
     dt.append(data)
     gt_data.append(row[1])
     gt_data.append(row[2])
-    gt.append(gt_data)
-   
+    gt.append(gt_data) 
 # print(dt)
 # print(gt)
 
@@ -59,4 +58,6 @@ for text in dt:
 
 # print(rslt)
 
-evaluate(rslt,gt)
+# evaluate(rslt,gt)
+
+evaluate_question(rslt,gt)
