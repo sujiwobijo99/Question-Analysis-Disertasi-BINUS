@@ -1,8 +1,7 @@
 import nltk
 
 from modules.info_extraction import getNamedEntity,getphrase
-from modules.determine_answer_type import determineAnswerType
-from modules.determine_answer_type import defineCategory
+from modules.determine_answer_type import determineAnswerType, determineAnswerTypeFactoid, defineCategory
 from modules.get_vectors import getQueryVector
 
 # Question Translation Library
@@ -19,9 +18,20 @@ while isActive:
     # text = "Siapa nama President Indonesia"
     text_eng = tss.google(text, to_language='en')
     print('English text original:',text_eng)
-    text_eng = filtered_sentence = remove_stopwords(text_eng)
+    stopword_exclusion = ["how much", "how big", "how old", 'how many', 'how often', 'how far', 'how long', 'which']
+    process_stopword = True
+    for i in stopword_exclusion:
+            if i in text_eng.lower():
+                process_stopword = False
+    if process_stopword:
+         text_eng = filtered_sentence = remove_stopwords(text_eng)
+
     print('Stop word processed:',text_eng)
-    quest = determineAnswerType(text_eng)
+    if process_stopword:
+        quest = determineAnswerType(text_eng)
+    else :
+        quest = determineAnswerTypeFactoid(text_eng)
+         
     ans = defineCategory(text_eng)
     print ("---question classified: ",quest)
     print ("---answer category: ",ans)
