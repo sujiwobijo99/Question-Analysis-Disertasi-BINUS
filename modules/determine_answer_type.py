@@ -52,6 +52,13 @@ def defineCategory(text):
     if  status == True:
         return "TIDAK TERKATEGORIKAN" 
 
+def determineAnswerTypeFactoid(text):
+    # Bagaimana
+    if 'which' in text.lower():
+        return "YANG MANA (FACTOID)"
+    for i in ['how much', 'how long', 'how many']: 
+        if i in text.lower(): return "BERAPA BANYAK (FACTOID)"
+    return "BAGAIMANA (FACTOID)"
 def determineAnswerType(text):
     word = nltk.word_tokenize(text)
     pos_tag = nltk.pos_tag(word)
