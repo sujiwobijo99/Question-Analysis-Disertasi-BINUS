@@ -5,6 +5,7 @@ import nltk
 
 from modules.info_extraction import getContinuousChunk
 
+
 def defineCategory(text):
     qPOS = nltk.pos_tag(nltk.word_tokenize(text))
     # print(qPOS)
@@ -20,11 +21,11 @@ def defineCategory(text):
                 # print("---question category: ","JADWAL")
                 status = False
                 return "JADWAL"
-            elif i[0].lower() in ["degree", "master", "program", "programs", "tpks", "major", "majors", "majoring", "learning", "lectures", "lecture"]:
+            elif i[0].lower() in ["degree", "master", "program", "programs", "tpks", "major", "majors", "majoring", "learning", "lectures", "lecture", "student", "studets"]:
                 # print("---question category: ","INFORMASI PROGRAM")
                 status = False
                 return "INFORMASI PROGRAM"
-            elif i[0].lower() in ["information", "informations", "ask","asking","service", "services", "serving", "care", "administration", "marketing"]:
+            elif i[0].lower() in ["information", "informations", "ask", "asking", "service", "services", "serving", "care", "administration", "marketing"]:
                 # print("---question category: ","ADMISI")
                 status = False
                 return "ADMISI"
@@ -32,7 +33,7 @@ def defineCategory(text):
                 # print("---question category: ","ADMISI")
                 status = False
                 return "BIAYA PERKULIAHAN"
-            elif i[0].lower() in ["verification", "validation", "payment","-register", "-registering", "-registration"]:
+            elif i[0].lower() in ["verification", "validation", "payment", "-register", "-registering", "-registration"]:
                 # print("---question category: ","VERIFIKASI DAN PENDAFTARAN ULANG")
                 status = False
                 return "VERIFIKASI DAN PENDAFTARAN ULANG"
@@ -48,17 +49,32 @@ def defineCategory(text):
                 # print("---question category: ","REFUND")
                 status = False
                 return "PENGEMBALIAN DANA"
-    
-    if  status == True:
-        return "TIDAK TERKATEGORIKAN" 
+
+    if status == True:
+        return "TIDAK TERKATEGORIKAN"
+
 
 def determineAnswerTypeFactoid(text):
     # Bagaimana
     if 'which' in text.lower():
-        return "YANG MANA (FACTOID)"
-    for i in ['how much', 'how long', 'how many']: 
-        if i in text.lower(): return "BERAPA BANYAK (FACTOID)"
-    return "BAGAIMANA (FACTOID)"
+        return "YANG MANA"
+    for i in ['how much', 'how many', 'how great', 'how litle']:
+        if i in text.lower():
+            return "BERAPA BANYAK"
+    for i in ['how often']:
+        if i in text.lower():
+            return "BERAPA SERING"
+    for i in ['how far', 'how long the way']:
+        if i in text.lower():
+            return "BERAPA JAUH"
+    for i in ['how long', 'how small', 'how short']:
+        if i in text.lower():
+            return "BERAPA PANJANG"
+    for i in ['how old', 'how young', 'how mature']:
+        if i in text.lower():
+            return "BERAPA TUA"
+
+
 def determineAnswerType(text):
     word = nltk.word_tokenize(text)
     pos_tag = nltk.pos_tag(word)
@@ -67,7 +83,7 @@ def determineAnswerType(text):
     for ele in chunk:
         if isinstance(ele, nltk.Tree):
             ne_list.append(ele.label())
-    if len(ne_list)>1:
+    if len(ne_list) > 1:
         return ne_list
     else:
         questionTaggers = ['WP', 'WDT', 'WP$', 'WRB', 'VBZ']
@@ -79,20 +95,19 @@ def determineAnswerType(text):
             if token[1] in questionTaggers:
                 qTag = token[0].lower()
                 break
-        
+
         # print(qTag)
 
         if qTag == None:
             if len(qPOS) > 1:
-                if qPOS[0][0].lower() in ['are', 'can', 'should','will']:
+                if qPOS[0][0].lower() in ['are', 'can', 'should', 'will']:
                     qTag = "APA"
                     return "APA"
-        
 
         if qTag == 'is':
             # print("---question classified: ","APA")
             return "APA"
-            # print(qPOS)     
+            # print(qPOS)
 
         if qTag != "YESNO":
             # who/where/what/why/when/is/are/can/should
@@ -100,13 +115,13 @@ def determineAnswerType(text):
                 # print("---question classified: ","SIAPA")
                 return "SIAPA"
             elif qTag == "where":
-                # print("---question classified: ","DIMANA")                
+                # print("---question classified: ","DIMANA")
                 return "DIMANA"
             elif qTag == "when":
-                # print("---question classified: ","KAPAN")                
+                # print("---question classified: ","KAPAN")
                 return "KAPAN"
             elif qTag == "why":
-                # print("---question classified: ","MENGAPA")                
+                # print("---question classified: ","MENGAPA")
                 return "MENGAPA"
             elif qTag == "which":
                 if len(qPOS) > 1:
@@ -120,8 +135,8 @@ def determineAnswerType(text):
                     elif t2[0].lower() in ["person", "man", "women", "uncle", "aunt", "male", "female"]:
                         # print("---question classified: ","SIAPA")
                         return "SIAPA"
-                
-            elif qTag == "what": 
+
+            elif qTag == "what":
                 qTok = getContinuousChunk(text)
                 # print("---question classified: ","APA")
                 '''if len(qTok) > 1:
@@ -129,7 +144,7 @@ def determineAnswerType(text):
                         text = " ".join([qTok[0][1], qTok[2][1], qTok[1][1]])
                         print("DEFINITION")'''
                 for token in qPOS:
-                    if token[0].lower() in ["city", "place", "country", "capital", "state", "location", "area","route"]:
+                    if token[0].lower() in ["city", "place", "country", "capital", "state", "location", "area", "route"]:
                         # print("---question classified: ","DIMANA")
                         return "DIMANA"
                     elif token[0].lower() in ["company", "industry", "organization"]:
@@ -139,27 +154,25 @@ def determineAnswerType(text):
                         # print("---question classified: ","APA")
                         return "APA"
                     else:
-                        return "APA"                        
-                
+                        return "APA"
 
             elif qTag == "how":
-                # print("---question classified: ","BAGAIMANA")                
+                # print("---question classified: ","BAGAIMANA")
                 t2 = qPOS[1]
                 for i in qPOS:
                     if i[0].lower() in ["few", "great", "little", "many", "much"]:
                         # print("---question category: ","KUANTITAS")
-                        return "KUANTITAS"
+                        return "HOW MANY"
                     elif i[0].lower() in ["tall", "wide", "big", "far"]:
                         # print("---question category: ","PENGUKURAN LINIER")
-                        return "PENGUKURAN LINEAR"
+                        return "HOW FAR"
                     else:
                         return "BAGAIMANA"
-                
+
             # elif qTag == "is":
             #     t2 = qPOS[1]
             #     if t2[0].lower() in ["few", "great", "little", "many", "much"]:
             #         print(t2[0].lower())
-            #         return "KUANTITAS"                    
+            #         return "KUANTITAS"
             else:
                 return "TIDAK TERKLASIFIKASIKAN"
-        
